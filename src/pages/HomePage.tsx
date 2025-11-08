@@ -1,73 +1,110 @@
-import React, { useState } from "react";
-import { Input, Pagination } from "antd";
-import { searchMovies } from "../services/omdbService";
-import { MovieCard } from "../components/MovieCard";
+import { useState } from "react";
+import { Spin, Card, Image } from "antd";
+import { IoIosArrowForward } from "react-icons/io";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
 
-export const HomePage: React.FC = () => {
-	const [q, setQ] = useState("");
-	const [results, setResults] = useState<any[]>([]);
-	const [total, setTotal] = useState(0);
-	const [page, setPage] = useState(1);
+const { Meta } = Card;
+
+const HomePage = () => {
+	const [query, setQuery] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [movies, setMovies] = useState<any[]>([]);
 
-	async function doSearch(p = 1) {
-		if (!q) return;
+	const handleSearch = async () => {
+		if (!query.trim()) return;
 		setLoading(true);
-		const data = await searchMovies(q, p);
-		setLoading(false);
-		if (data?.Search) {
-			setResults(data.Search);
-			setTotal(
-				Number(
-					data.totalResults || data.totalResults === 0
-						? data.totalResults
-						: data.Search.length
-				)
-			);
-		} else {
-			setResults([]);
-			setTotal(0);
+
+		try {
+		} catch (err) {
+			console.error("Failed to fetch movies", err);
+		} finally {
+			setLoading(false);
 		}
-	}
+	};
 
 	return (
-		<div>
-			<div className="flex gap-4 mb-6">
-				<Input.Search
-					placeholder="Search movies (e.g. Inception)"
-					enterButton
-					value={q}
-					onChange={(e) => setQ(e.target.value)}
-					onSearch={() => {
-						setPage(1);
-						doSearch(1);
-					}}
-					loading={loading}
-				/>
-			</div>
+		<>
+			<div className="flex flex-col items-center text-white px-4 text-center">
+				{/* Hero section */}
+				<div className="max-w-2xl mt-20">
+					<h1 className="text-4xl md:text-5xl font-bold mb-4">
+						Unlimited movies, TV shows, and more
+					</h1>
+					<p className="text-lg mb-2 ">
+						Explore trending films and search your favorite movies instantly.
+					</p>
 
-			<div className="movie-grid">
-				{results.map((m) => (
-					<MovieCard
-						key={m.imdbID}
-						movie={m}
-					/>
-				))}
-			</div>
-
-			{total > 10 && (
-				<div className="mt-6 flex justify-center">
-					<Pagination
-						current={page}
-						total={total}
-						pageSize={10}
-						onChange={(p) => {
-							setPage(p);
-							doSearch(p);
-						}}
-					/>
+					{/* Search box */}
+					<div className="flex gap-2 items-center justify-center mt-2">
+						<input
+							placeholder="Search for a movie..."
+							value={query}
+							onChange={(e) => setQuery(e.target.value)}
+							className="w-100 rounded-md bg-transparent border border-gray-400 p-4  "
+						/>
+						<div className="text-xl font-semibold">
+							<button
+								onClick={handleSearch}
+								className="bg-[#e50914] border-none p-3 rounded-md  px-7  "
+							>
+								<div className="flex items-center gap-2 ">
+									<div>Search</div>
+									<IoIosArrowForward size={25} />
+								</div>
+							</button>
+						</div>
+					</div>
 				</div>
-			)}
-		</div>
+			</div>
+			{/* TRANDING NOW */}
+			<div className="mt-10 text-white ">
+				{loading ? (
+					<div className=" justify-center">
+						<Spin size="large" />
+					</div>
+				) : (
+					<div className="text-white max-w-[100vw] ">
+						<Carousel className="w-full max-w-screen-2xl mx-auto ">
+							<div className="p-2 text-2xl font-semibold">Tranding Now</div>
+							<CarouselContent className="flex ">
+								{Array.from({ length: 10 }).map((_, index) => (
+									<CarouselItem
+										key={index}
+										className="relative basis-1/6 px-4 shrink-0"
+									>
+										{/* Netflix-style number */}
+										<div
+											className="absolute -left-2 bottom-2 text-8xl font-black text-black leading-none
+	[text-shadow:-1px_-1px_0_#fff,1px_-1px_0_#fff,-1px_1px_0_#fff,1px_1px_0_#fff]"
+										>
+											{index + 1}
+										</div>
+
+										{/* Movie image */}
+										<div className="rounded-xl overflow-hidden h-[30vh]">
+											<img
+												src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKR2RjBZ0_0VH8mPj8rPYbe1S6Y0yJkzka9g&s"
+												alt=""
+												className="w-full h-full object-cover"
+											/>
+										</div>
+									</CarouselItem>
+								))}
+							</CarouselContent>
+							<CarouselPrevious />
+							<CarouselNext />
+						</Carousel>
+					</div>
+				)}
+			</div>
+		</>
 	);
 };
+
+export default HomePage;

@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const BACKEND = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000/api";
 
 const api = axios.create({
@@ -8,3 +7,4 @@ const api = axios.create({
 });
 
 export default api;
+// https://developer.themoviedb.org/reference/account-lists
