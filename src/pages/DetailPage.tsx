@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getMovieById } from "../services/omdbService";
+import { getMovieById } from "../services/external/omdbService";
 import { Button } from "antd";
 import { addFavorite } from "../services/backendService";
 

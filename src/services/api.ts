@@ -7,4 +7,3 @@ const api = axios.create({
 });
 
 export default api;
-// https://developer.themoviedb.org/reference/account-lists

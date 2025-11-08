@@ -13,7 +13,7 @@ const Header = () => {
 				/>
 			</div>
 			<div className="flex items-center gap-2 text-white">
-				<button className="bg-[#e50914] p-2 rounded-md  px-5">Sign In</button>
+				{/* <button className="bg-[#e50914] p-2 rounded-md  px-5">Sign In</button> */}
 			</div>
 		</div>
 	);
