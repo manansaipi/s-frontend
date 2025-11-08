@@ -44,7 +44,6 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 
 	const handleGetStarted = () => {
 		onClose();
-		// You can navigate to a detailed view of the movie if needed
 		navigate(`/movie/${movieId}`);
 	};
 
@@ -141,9 +140,9 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 						{/* Get Started Button */}
 						<button
 							onClick={handleGetStarted}
-							className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200"
+							className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
 						>
-							<div className="text-lg font-semibold">Get Started</div>
+							<div className="text-lg font-semibold ">Get Started</div>
 							<IoIosArrowForward size={25} />
 						</button>
 					</div>

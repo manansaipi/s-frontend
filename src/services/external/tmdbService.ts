@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { MovieResponseDTO } from "@/dto/MovieDTO";
-import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
+import type { MovieDetailDTO, MovieVideosDTO } from "@/dto/MovieDetailDTO";
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_BASE = "https://api.themoviedb.org/3";
@@ -44,6 +44,27 @@ export async function searchMovies(
 			language: "en-US",
 			query: query, // Pass the search query
 			page,
+		},
+	});
+	return res.data;
+}
+
+export async function getMovieVideos(movieId: number): Promise<MovieVideosDTO> {
+	const res = await tmdbApi.get(`/movie/${movieId}/videos`, {
+		params: {
+			api_key: TMDB_API_KEY,
+			language: "en-US",
+		},
+	});
+	return res.data;
+}
+export async function getSimilarMovies(
+	movieId: number
+): Promise<MovieResponseDTO> {
+	const res = await tmdbApi.get(`/movie/${movieId}/similar`, {
+		params: {
+			api_key: TMDB_API_KEY,
+			language: "en-US",
 		},
 	});
 	return res.data;
