@@ -33,3 +33,18 @@ export async function getMovieDetail(movieId: number): Promise<MovieDetailDTO> {
 	});
 	return res.data;
 }
+
+export async function searchMovies(
+	query: string,
+	page = 1
+): Promise<MovieResponseDTO> {
+	const res = await tmdbApi.get(`/search/movie`, {
+		params: {
+			api_key: TMDB_API_KEY,
+			language: "en-US",
+			query: query, // Pass the search query
+			page,
+		},
+	});
+	return res.data;
+}

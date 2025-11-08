@@ -1,6 +1,7 @@
 // src/routes/index.jsx
 import { Routes, Route } from "react-router-dom";
 import Main from "../pages/Main";
+import SearchPage from "@/pages/SearchPage";
 
 const AppRoutes = () => (
 	<Routes>
@@ -8,10 +9,10 @@ const AppRoutes = () => (
 			path="/"
 			element={<Main />}
 		>
-			{/* <Route
-				path="/detail"
-				element={<HomePage />}
-			/> */}
+			<Route
+				path="/search"
+				element={<SearchPage />}
+			/>
 		</Route>
 	</Routes>
 );

@@ -14,6 +14,7 @@ import {
 	getMovieDetail,
 } from "@/services/external/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
+import { useNavigate } from "react-router-dom";
 
 type ModalMovieData = {
 	loading: boolean;
@@ -25,7 +26,7 @@ const HomePage = () => {
 	const [loading, setLoading] = useState(false);
 	const [movies, setMovies] = useState<MovieDTO[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+	const navigate = useNavigate();
 	const [modalData, setModalData] = useState<ModalMovieData>({
 		loading: false,
 		data: null,
@@ -33,13 +34,16 @@ const HomePage = () => {
 
 	const handleSearch = async () => {
 		if (!query.trim()) return;
-		setLoading(true);
 
-		try {
-		} catch (err) {
-			console.error("Failed to fetch movies", err);
-		} finally {
-			setLoading(false);
+		setLoading(false);
+
+		// 1. Redirect to the search results page, passing the query as a URL parameter
+		navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			handleSearch();
 		}
 	};
 
@@ -75,7 +79,7 @@ const HomePage = () => {
 
 	return (
 		<>
-			<div className="flex flex-col items-center text-white px-4 text-center">
+			<div className=" flex flex-col items-center text-white px-4 text-center pt-[15vh]">
 				{/* Hero section */}
 				<div className="max-w-2xl mt-20">
 					<h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -86,19 +90,20 @@ const HomePage = () => {
 					</p>
 
 					{/* Search box */}
-					<div className="flex gap-2 items-center justify-center mt-2">
+					<div className="flex gap-2 items-center justify-center mt-2 ">
 						<input
 							placeholder="Search for a movie..."
 							value={query}
+							onKeyDown={handleKeyDown}
 							onChange={(e) => setQuery(e.target.value)}
-							className="w-100 rounded-md bg-transparent border border-gray-400 p-4  "
+							className="w-100 rounded-md bg-transparent border border-gray-400 p-4 "
 						/>
-						<div className="text-xl font-semibold">
+						<div className="text-xl font-semibold ">
 							<button
 								onClick={handleSearch}
-								className="bg-[#e50914] border-none p-3 rounded-md  px-7  "
+								className="bg-[#e50914] border-none p-3 rounded-md px-7 cursor-pointer"
 							>
-								<div className="flex items-center gap-2 ">
+								<div className="flex items-center gap-2">
 									<div>Search</div>
 									<IoIosArrowForward size={25} />
 								</div>
@@ -108,7 +113,7 @@ const HomePage = () => {
 				</div>
 			</div>
 			{/* TRANDING NOW */}
-			<div className="mt-10 text-white ">
+			<div className="mt-20 text-white ">
 				{loading ? (
 					<div className=" justify-center">
 						<Spin size="large" />
@@ -171,7 +176,7 @@ const HomePage = () => {
 				}
 				footer={null}
 				open={isModalOpen}
-				width={"40%"}
+				width={"50%"}
 				onCancel={() => setIsModalOpen(false)}
 				className="custom-modal-transparent-bg"
 				styles={{
@@ -196,7 +201,6 @@ const HomePage = () => {
 						/>
 					</div>
 				) : selectedMovie ? (
-					// 4. Use dynamic data to populate the Modal
 					<div
 						className="relative w-full h-[500px] text-white p-6 flex flex-col justify-end"
 						style={{
@@ -249,9 +253,7 @@ const HomePage = () => {
 
 							{/* Get Started Button */}
 							<button
-								onClick={() =>
-									alert(`Starting playback for ${selectedMovie.title}...`)
-								}
+								onClick={() => navigate("/detail")}
 								className="bg-[#e50914] text-white  py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200"
 							>
 								<div className="text-lg font-semibold">Get Started</div>
