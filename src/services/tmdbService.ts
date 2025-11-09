@@ -1,4 +1,4 @@
-import axios from "axios";
+import { tmdbApi } from "./api";
 import type { MovieResponseDTO } from "@/dto/MovieDTO";
 import type {
 	MovieCreditsDTO,
@@ -9,15 +9,6 @@ import type {
 } from "@/dto/MovieDetailDTO";
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const TMDB_BASE = "https://api.themoviedb.org/3";
-
-export const tmdbApi = axios.create({
-	baseURL: TMDB_BASE,
-	timeout: 10000,
-	headers: {
-		accept: "application/json",
-	},
-});
 const defaultParams = {
 	api_key: TMDB_API_KEY,
 	language: "en-US",

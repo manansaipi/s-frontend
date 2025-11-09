@@ -11,7 +11,7 @@ import {
 	getPopularMovies,
 	getMovieVideos,
 	getSimilarMovies,
-} from "@/services/external/tmdbService";
+} from "@/services/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
 import type { MovieDTO } from "@/dto/MovieDTO";
 import {

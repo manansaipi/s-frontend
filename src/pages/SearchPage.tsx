@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Spin } from "antd";
-import { searchMovies } from "@/services/external/tmdbService";
+import { searchMovies } from "@/services/tmdbService";
 import type { MovieDTO } from "@/dto/MovieDTO";
 import MovieDetailModal from "@/components/MovieDetailModal"; // Import reusable modal component
 

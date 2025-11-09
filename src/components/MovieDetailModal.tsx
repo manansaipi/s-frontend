@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Spin } from "antd";
 import { IoIosArrowForward } from "react-icons/io";
-import { getMovieDetail } from "@/services/external/tmdbService";
+import { getMovieDetail } from "@/services/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
 import { useNavigate } from "react-router-dom";
 

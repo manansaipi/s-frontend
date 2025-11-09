@@ -9,7 +9,7 @@ import {
 	CarouselPrevious,
 } from "@/components/ui/carousel";
 import type { MovieDTO } from "@/dto/MovieDTO";
-import { getPopularMovies } from "@/services/external/tmdbService";
+import { getPopularMovies } from "@/services/tmdbService";
 import { useNavigate } from "react-router-dom";
 import MovieDetailModal from "@/components/MovieDetailModal";
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFavorites, removeFavorite } from "../services/backendService";
+import { getFavorites, removeFavorite } from "../services/internalService";
 import { MovieCard } from "../components/MovieCard";
 
 export const FavoritesPage: React.FC = () => {

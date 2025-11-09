@@ -4,7 +4,7 @@ import {
 	getMovieCredits,
 	getMovieReviews,
 	getMovieImages,
-} from "@/services/external/tmdbService";
+} from "@/services/tmdbService";
 import type {
 	MovieDetailDTO,
 	GenreDTO,
