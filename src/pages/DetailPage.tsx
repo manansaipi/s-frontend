@@ -21,6 +21,7 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
+import MovieInfoModal from "@/components/MovieInfoModal";
 
 const IMAGE_BASE_URL_W500 = "https://image.tmdb.org/t/p/w500";
 const YOUTUBE_BASE_URL = "https://www.youtube.com/embed/";
@@ -34,6 +35,7 @@ const DetailPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [popularMovies, setSimilarMovie] = useState<MovieDTO[]>([]);
 	const [isMuted, setIsMuted] = useState(false);
+	const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
 
 	const toggleMute = () => setIsMuted((prev) => !prev);
 
@@ -168,10 +170,10 @@ const DetailPage = () => {
 							"No synopsis available."}
 					</p>
 
-					<div className="flex gap-3 pt-4">
+					<div className="flex gap-3 pt-4 cursor-pointer">
 						<button
 							onClick={() => console.log("Playing movie...")}
-							className="flex items-center bg-white text-black text-lg font-bold py-3 px-6 rounded-md hover:bg-gray-200 transition"
+							className="flex items-center bg-white text-black text-lg font-bold py-3 px-6 rounded-md hover:bg-gray-200 transition "
 						>
 							<FaPlay
 								className="mr-3 text-black"
@@ -180,7 +182,7 @@ const DetailPage = () => {
 							<div className="text-black text-2xl">Play</div>
 						</button>
 						<button
-							onClick={() => console.log("Showing more info...")}
+							onClick={() => setIsInfoModalVisible(true)}
 							className="flex items-center bg-[#38403d]  text-white text-lg font-bold py-3 px-6 rounded-md opacity-80 hover:opacity-50 transition cursor-pointer"
 						>
 							<IoMdInformationCircleOutline
@@ -229,6 +231,13 @@ const DetailPage = () => {
 					</Carousel>
 				)}
 			</div>
+
+			<MovieInfoModal
+				movieId={movieId}
+				movieDetail={movieDetail}
+				isVisible={isInfoModalVisible}
+				onClose={() => setIsInfoModalVisible(false)}
+			/>
 		</div>
 	);
 };

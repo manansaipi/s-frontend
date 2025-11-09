@@ -57,3 +57,76 @@ export interface MovieVideosDTO {
 		id: string;
 	}>;
 }
+
+// src/dto/MovieCreditsDTO.ts
+export interface CastMemberDTO {
+	adult: boolean;
+	gender: number;
+	id: number;
+	known_for_department: string;
+	name: string;
+	character: string;
+	profile_path: string | null;
+	order: number;
+}
+
+export interface CrewMemberDTO {
+	adult: boolean;
+	gender: number;
+	id: number;
+	known_for_department: string;
+	name: string;
+	job: string;
+	department: string;
+	profile_path: string | null;
+}
+
+export interface MovieCreditsDTO {
+	id: number;
+	cast: CastMemberDTO[];
+	crew: CrewMemberDTO[];
+}
+
+// src/dto/MovieReviewsDTO.ts
+export interface ReviewAuthorDetailsDTO {
+	name: string;
+	username: string;
+	avatar_path: string | null;
+	rating: number | null;
+}
+
+export interface MovieReviewDTO {
+	author: string;
+	author_details: ReviewAuthorDetailsDTO;
+	content: string;
+	created_at: string;
+	id: string;
+	updated_at: string;
+	url: string;
+}
+
+export interface MovieReviewsResponseDTO {
+	id: number;
+	page: number;
+	results: MovieReviewDTO[];
+	total_pages: number;
+	total_results: number;
+}
+
+// --- DTO: Images ---
+export interface ImageFileDTO {
+	aspect_ratio: number;
+	height: number;
+	iso_639_1: string | null;
+	file_path: string;
+	vote_average: number;
+	vote_count: number;
+	width: number;
+}
+
+export interface MovieImagesDTO {
+	id: number;
+	backdrops: ImageFileDTO[];
+	logos: ImageFileDTO[];
+	posters: ImageFileDTO[];
+}

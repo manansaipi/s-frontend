@@ -94,7 +94,7 @@ const HomePage = () => {
 			{/* TRANDING NOW */}
 			<div className="mt-20 text-white ">
 				{loading ? (
-					<div className=" justify-center">
+					<div className="flex justify-center items-center w-full">
 						<Spin size="large" />
 					</div>
 				) : (
