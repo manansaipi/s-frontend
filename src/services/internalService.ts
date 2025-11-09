@@ -5,7 +5,7 @@ export async function addFavorite(userId: string, movie: any) {
 	return res.data;
 }
 
-export async function getFavorites(userId: string = "id123") {
+export async function getFavorites(userId: string) {
 	const res = await internalApi.get(`/favorites/${userId}`);
 	return res.data;
 }

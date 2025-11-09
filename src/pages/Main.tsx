@@ -1,4 +1,3 @@
-import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import HomePage from "./HomePage";
@@ -8,7 +7,8 @@ const Main = () => {
 	const path = location.pathname;
 
 	// show background only on home andd search pages
-	const showBackground = path === "/" || path.startsWith("/search");
+	const showBackground =
+		path === "/" || path.startsWith("/search") || path.startsWith("/favorites");
 
 	return (
 		<div

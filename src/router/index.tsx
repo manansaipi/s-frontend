@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Main from "../pages/Main";
 import SearchPage from "@/pages/SearchPage";
 import DetailPage from "@/pages/DetailPage";
+import FavoritesPage from "@/pages/FavoritesPage";
 
 const AppRoutes = () => (
 	<Routes>
@@ -13,6 +14,10 @@ const AppRoutes = () => (
 			<Route
 				path="/search"
 				element={<SearchPage />}
+			/>
+			<Route
+				path="/favorites"
+				element={<FavoritesPage />}
 			/>
 			<Route
 				path="/movie/:id"

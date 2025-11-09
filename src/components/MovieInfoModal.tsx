@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Spin, Tabs, Carousel } from "antd";
+import { Modal, Spin, Tabs, Carousel, Image } from "antd";
 import {
 	getMovieCredits,
 	getMovieReviews,
@@ -78,33 +78,35 @@ const CastSection: React.FC<{ cast: CastMemberDTO[] }> = ({ cast }) => {
 				Top Cast
 			</h3>
 			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-				{cast.slice(0, 16).map((member) => (
-					<div
-						key={member.id}
-						className="flex flex-col items-center text-center"
-					>
-						<div className="w-20 h-20 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center mb-2 shadow-lg">
-							{member.profile_path ? (
-								<img
-									src={`${IMAGE_BASE_URL_PROFILE}${member.profile_path}`}
-									alt={member.name}
-									className="w-full h-full object-cover"
-								/>
-							) : (
-								<FaUserCircle
-									size={40}
-									className="text-gray-500"
-								/>
-							)}
+				<Image.PreviewGroup>
+					{cast.map((member) => (
+						<div
+							key={member.id}
+							className="flex flex-col items-center text-center"
+						>
+							<div className="w-20 h-20 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center mb-2 shadow-lg">
+								{member.profile_path ? (
+									<Image
+										src={`${IMAGE_BASE_URL_PROFILE}${member.profile_path}`}
+										alt={member.name}
+										className="w-full h-full object-cover"
+									/>
+								) : (
+									<FaUserCircle
+										size={40}
+										className="text-gray-500"
+									/>
+								)}
+							</div>
+							<p className="text-sm font-semibold leading-tight text-white">
+								{member.name}
+							</p>
+							<p className="text-xs text-gray-400 truncate w-full">
+								{member.character}
+							</p>
 						</div>
-						<p className="text-sm font-semibold leading-tight text-white">
-							{member.name}
-						</p>
-						<p className="text-xs text-gray-400 truncate w-full">
-							{member.character}
-						</p>
-					</div>
-				))}
+					))}
+				</Image.PreviewGroup>
 			</div>
 		</div>
 	);

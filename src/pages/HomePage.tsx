@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Spin, Card, Image, Modal, Tag } from "antd";
+import { Spin } from "antd";
 import { IoIosArrowForward } from "react-icons/io";
 import {
 	Carousel,

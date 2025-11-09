@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Spin } from "antd";
-import { FaPlay, FaInfoCircle, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
-import {
-	IoIosArrowForward,
-	IoMdInformationCircleOutline,
-} from "react-icons/io";
+import { FaPlay, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import {
 	getMovieDetail,
-	getPopularMovies,
 	getMovieVideos,
 	getSimilarMovies,
 } from "@/services/tmdbService";
