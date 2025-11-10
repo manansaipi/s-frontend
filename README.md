@@ -1,73 +1,68 @@
-# React + TypeScript + Vite
+# Movie App Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for a movie browsing application, built with React and Vite. It allows users to explore movies, view details, search, and manage a personal "Favorites" list by authenticating with a custom backend.
 
-Currently, two official plugins are available:
+## 📋 Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before you begin, ensure you have the following installed on your system:
+* [Node.js](https://nodejs.org/) (LTS version recommended)
+* npm (comes with Node.js)
 
-## React Compiler
+## 🛠️ How to Run
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Follow these steps to get the frontend running locally.
 
-## Expanding the ESLint configuration
+### 1. Clone the Repository
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone the repository [https://github.com/manansaipi/s-frontend.git](https://github.com/manansaipi/s-frontend.git)
+```
+git clone https://github.com/manansaipi/s-frontend.git
+```
+Navigate into the project directory
+```
+cd s-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Install Dependencies
+Install all the required npm packages.
 ```
+npm install
+```
+### 3. Set Up the Backend
+This frontend requires a backend server to handle user authentication and favorites.
+#### 1. In a separate terminal window or directory
+clone the backend repository:  [https://github.com/manansaipi/s-backend.git](https://github.com/manansaipi/s-backend.git)
+
+```
+git clone https://github.com/manansaipi/s-backend.git
+```
+#### 2 Navigate into the backend directory:
+```
+cd s-backend
+```
+#### 3. Follow the instructions in the backend's README.md file 
+To install its dependencies (e.g., pip install -r requirements.txt) and run the server (e.g., uvicorn main:app --reload).
+
+Important: For the login and favorites features to work, this backend server must be running. By default, it runs at http://127.0.0.1:8000.
+
+
+### 4. Set Up Environment Variables
+Now, back in the s-frontend directory, you need to create a .env file to tell the frontend where to find the APIs.
+
+- Create an account if you don't have on [TMDB](https://www.themoviedb.org/)
+  to consume movie/tv data.
+- And then follow the [documentation](https://developers.themoviedb.org/3/getting-started/introduction) to create API Key.
+- You can use this key '2824692e8b1b14a21907b1fd78b9e192' or get your own from https://www.themoviedb.org/
+- Finally, if you use v3 of TMDB API, create a file named `.env`, and copy and paste the content of `.env.example`. And then paste the API Key you just created.
+##### And This must match the URL where your backend server is running.
+- VITE_BACKEND_URL=[http://127.0.0.1:8000/api](http://127.0.0.1:8000/api)
+- VITE_TMDB_API_KEY=2824692e8b1b14a21907b1fd78b9e192
+
+### 5. Run the Frontend Application
+Once the dependencies are installed, the backend is running, and the ```.env``` al file is set up, you can start the frontend development server.
+
+```
+npm run dev
+```
+
+The application should now be running. Open your browser and go to the local URL provided in your terminal (usually http://localhost:5173).
