@@ -1,6 +1,16 @@
+import { ConfigProvider } from "antd";
 import AppRoutes from "./router";
 
-
 export default function App() {
-	return <AppRoutes />;
+	return (
+		<ConfigProvider
+			theme={{
+				token: {
+					colorPrimary: "#e50914",
+				},
+			}}
+		>
+			<AppRoutes />
+		</ConfigProvider>
+	);
 }
