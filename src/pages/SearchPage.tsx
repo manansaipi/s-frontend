@@ -4,8 +4,11 @@ import { Spin } from "antd";
 import { searchMovies } from "@/services/tmdbService";
 import type { MovieDTO } from "@/dto/MovieDTO";
 import MovieDetailModal from "@/components/MovieDetailModal"; // Import reusable modal component
+import type { FavoriteOut } from "@/dto/FavoriteDTO";
+import { getFavorites } from "@/services/internalService";
 
 const SearchPage = () => {
+	const [favorites, setFavorites] = useState<FavoriteOut[]>([]);
 	const [searchParams] = useSearchParams();
 	const query = searchParams.get("q") || "";
 
@@ -13,7 +16,6 @@ const SearchPage = () => {
 	const [loading, setLoading] = useState(false);
 
 	const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-
 	// Handlers for the reusable modal
 	const openMovieModal = (movieId: number) => {
 		setSelectedMovieId(movieId);
@@ -21,6 +23,17 @@ const SearchPage = () => {
 
 	const closeMovieModal = () => {
 		setSelectedMovieId(null);
+	};
+
+	const fetchFavorites = async () => {
+		try {
+			const data = await getFavorites();
+			setFavorites(data);
+		} catch (err) {
+			console.error("Error fetching favorites:", err);
+			setFavorites([]);
+		} finally {
+		}
 	};
 
 	useEffect(() => {
@@ -96,6 +109,8 @@ const SearchPage = () => {
 				movieId={selectedMovieId}
 				isVisible={!!selectedMovieId}
 				onClose={closeMovieModal}
+				favorites={favorites}
+				onFavoriteChange={fetchFavorites}
 			/>
 		</div>
 	);

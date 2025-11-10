@@ -87,7 +87,6 @@ export interface MovieCreditsDTO {
 	crew: CrewMemberDTO[];
 }
 
-// src/dto/MovieReviewsDTO.ts
 export interface ReviewAuthorDetailsDTO {
 	name: string;
 	username: string;

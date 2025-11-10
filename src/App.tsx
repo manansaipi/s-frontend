@@ -1,5 +1,5 @@
 import { ConfigProvider } from "antd";
-import AppRoutes from "./router";
+import AppRoutes from "./routes";
 
 export default function App() {
 	return (

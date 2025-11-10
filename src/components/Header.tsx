@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import netflixLogo from "/assets/netflix-logo.png";
 import { Dropdown, type MenuProps } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaSearch, FaUserCircle, FaHeart } from "react-icons/fa";
 import SearchModal from "./SearchModal";
-import AuthModal from "./AuthModal"; 
+import AuthModal from "./AuthModal";
 import { getAuthToken, removeAuthToken } from "@/services/internalService";
 
 const Header = () => {
@@ -19,7 +19,6 @@ const Header = () => {
 		const token = getAuthToken();
 		if (token) {
 			try {
-				// Decode the JWT (base64 string) to extract the username (sub claim)
 				const payload = JSON.parse(atob(token.split(".")[1]));
 				setUsername(payload.sub || "User");
 			} catch (e) {
@@ -33,10 +32,8 @@ const Header = () => {
 
 	const handleSearch = (searchQuery: string) => {
 		if (!searchQuery.trim()) return;
-
 		setIsSearchModalOpen(false);
 		setQuery("");
-
 		navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
 	};
 
@@ -91,6 +88,16 @@ const Header = () => {
 							onClick={() => setIsSearchModalOpen(true)}
 						>
 							<FaSearch size={20} />
+						</button>
+					)}
+
+					{username && (
+						<button
+							className="p-2 rounded-full cursor-pointer bg-transparent hover:bg-gray-800 transition duration-200"
+							title="My Favorites"
+							onClick={() => navigate("/favorites")}
+						>
+							<FaHeart size={20} />
 						</button>
 					)}
 

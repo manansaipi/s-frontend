@@ -1,29 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Spin } from "antd";
+import { Modal, Spin, message } from "antd";
 import { IoIosArrowForward } from "react-icons/io";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { getMovieDetail } from "@/services/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
 import { useNavigate } from "react-router-dom";
+import {
+	addFavorite,
+	removeFavorite,
+	getAuthToken,
+} from "@/services/internalService";
+import type { FavoriteOut } from "@/dto/FavoriteDTO";
 
-// Define props for the reusable modal component
 interface MovieDetailModalProps {
 	movieId: number | null;
 	isVisible: boolean;
 	onClose: () => void;
+	favorites: FavoriteOut[];
+	onFavoriteChange: () => void;
 }
 
 const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 	movieId,
 	isVisible,
 	onClose,
+	favorites,
+	onFavoriteChange,
 }) => {
 	const navigate = useNavigate();
 	const [modalData, setModalData] = useState<MovieDetailDTO | null>(null);
 	const [loading, setLoading] = useState(false);
+	const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const currentFavorite = favorites.find((fav) => fav.movie_id === movieId);
+	const isFavorite = !!currentFavorite;
+
+	useEffect(() => {
+		if (isVisible) {
+			setIsLoggedIn(!!getAuthToken());
+		}
+	}, [isVisible]);
 
 	useEffect(() => {
 		if (!isVisible || movieId === null) {
-			setModalData(null); // Clsear data when hidden
+			setModalData(null);
 			return;
 		}
 
@@ -47,6 +67,31 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 		navigate(`/movie/${movieId}`);
 	};
 
+	const handleToggleFavorite = async () => {
+		if (!modalData || isFavoriteLoading) return;
+
+		setIsFavoriteLoading(true);
+		try {
+			if (isFavorite) {
+				await removeFavorite(currentFavorite!.id);
+				message.success(`Removed '${modalData.title}' from favorites`);
+			} else {
+				await addFavorite({
+					movie_id: modalData.id,
+					title: modalData.title,
+					poster_path: modalData.poster_path,
+				});
+				message.success(`Added '${modalData.title}' to favorites`);
+			}
+			onFavoriteChange();
+		} catch (error) {
+			console.error("Failed to toggle favorite:", error);
+			message.error("Something went wrong. Please try again.");
+		} finally {
+			setIsFavoriteLoading(false);
+		}
+	};
+
 	const selectedMovie = modalData;
 
 	return (
@@ -61,7 +106,6 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 			}
 			footer={null}
 			open={isVisible}
-			// Use responsive width, adjusting to 60% for large screens
 			width={"60%"}
 			onCancel={onClose}
 			className="custom-modal-transparent-bg"
@@ -137,14 +181,39 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 								"No summary available."}
 						</p>
 
-						{/* Get Started Button */}
-						<button
-							onClick={handleGetStarted}
-							className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
-						>
-							<div className="text-lg font-semibold ">Get Started</div>
-							<IoIosArrowForward size={25} />
-						</button>
+						{/* --- NEW: Button Container --- */}
+						<div className="flex items-center gap-4">
+							{/* Get Started Button */}
+							<button
+								onClick={handleGetStarted}
+								className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
+							>
+								<div className="text-lg font-semibold ">Get Started</div>
+								<IoIosArrowForward size={25} />
+							</button>
+
+							{isLoggedIn && (
+								<button
+									onClick={handleToggleFavorite}
+									disabled={isFavoriteLoading}
+									className="bg-white/20 text-white w-[54px] h-[54px] rounded-full flex items-center justify-center hover:bg-white/40 transition duration-200"
+									title={
+										isFavorite ? "Remove from favorites" : "Add to favorites"
+									}
+								>
+									{isFavoriteLoading ? (
+										<Spin />
+									) : isFavorite ? (
+										<FaHeart
+											size={24}
+											className="text-[#e50914]"
+										/>
+									) : (
+										<FaRegHeart size={24} />
+									)}
+								</button>
+							)}
+						</div>
 					</div>
 				</div>
 			) : (

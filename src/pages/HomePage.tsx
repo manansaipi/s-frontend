@@ -12,8 +12,11 @@ import type { MovieDTO } from "@/dto/MovieDTO";
 import { getPopularMovies } from "@/services/tmdbService";
 import { useNavigate } from "react-router-dom";
 import MovieDetailModal from "@/components/MovieDetailModal";
+import type { FavoriteOut } from "@/dto/FavoriteDTO";
+import { getFavorites } from "@/services/internalService";
 
 const HomePage = () => {
+	const [favorites, setFavorites] = useState<FavoriteOut[]>([]);
 	const [query, setQuery] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [movies, setMovies] = useState<MovieDTO[]>([]);
@@ -39,6 +42,17 @@ const HomePage = () => {
 
 	const closeMovieModal = () => {
 		setSelectedMovieId(null);
+	};
+
+	const fetchFavorites = async () => {
+		try {
+			const data = await getFavorites();
+			setFavorites(data);
+		} catch (err) {
+			console.error("Error fetching favorites:", err);
+			setFavorites([]);
+		} finally {
+		}
 	};
 
 	useEffect(() => {
@@ -147,6 +161,8 @@ const HomePage = () => {
 				movieId={selectedMovieId}
 				isVisible={!!selectedMovieId} // Modal is visible if selectedMovieId is set
 				onClose={closeMovieModal}
+				favorites={favorites}
+				onFavoriteChange={fetchFavorites}
 			/>
 		</>
 	);

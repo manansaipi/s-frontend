@@ -1,5 +1,6 @@
 import type { AuthTokenResponse, UserAuthData } from "@/dto/UserDTO";
 import { internalApi } from "./api";
+import type { FavoriteCreate, FavoriteOut } from "@/dto/FavoriteDTO";
 
 export async function registerUser(user: UserAuthData): Promise<any> {
 	const res = await internalApi.post("/users/register", user);
@@ -13,17 +14,18 @@ export async function loginUser(
 	return res.data;
 }
 
-export async function addFavorite(userId: string, movie: any) {
-	const res = await internalApi.post("/favorites", { user_id: userId, movie });
+export async function addFavorite(
+	favoriteData: FavoriteCreate
+): Promise<FavoriteOut> {
+	const res = await internalApi.post("/favorites/add-favorite", favoriteData);
 	return res.data;
 }
 
-export async function getFavorites(userId: string) {
-	const res = await internalApi.get(`/favorites/${userId}`);
+export async function getFavorites(): Promise<FavoriteOut[]> {
+	const res = await internalApi.get("/favorites");
 	return res.data;
 }
-
-export async function removeFavorite(favId: string) {
+export async function removeFavorite(favId: number): Promise<any> {
 	const res = await internalApi.delete(`/favorites/${favId}`);
 	return res.data;
 }

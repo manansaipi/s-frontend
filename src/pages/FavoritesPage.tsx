@@ -1,36 +1,47 @@
 import { useState, useEffect } from "react";
-import { Spin } from "antd";
+import { Spin, Empty } from "antd"; 
 import type { FavoriteOut } from "@/dto/FavoriteDTO";
 import MovieDetailModal from "@/components/MovieDetailModal";
-import { getFavorites } from "@/services/internalService";
+import { getFavorites } from "@/services/internalService"; 
+import { useNavigate } from "react-router-dom"; 
 
 const FavoritesPage = () => {
 	const [favorites, setFavorites] = useState<FavoriteOut[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [selectedMovieId, setSelectedMovieId] = useState<number | null>(null);
-
-	// TODO : USING AUTH AFTER IMPLLEMENT LOGIN
-	const userId = "id123";
+	const navigate = useNavigate(); 
 
 	const openMovieModal = (movieId: number) => setSelectedMovieId(movieId);
 	const closeMovieModal = () => setSelectedMovieId(null);
 
+	const fetchFavorites = async () => {
+		setLoading(true);
+		try {
+			const data = await getFavorites();
+			setFavorites(data);
+		} catch (err) {
+			console.error("Error fetching favorites:", err);
+			setFavorites([]);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
+
 		const fetchFavorites = async () => {
-			setLoading(true);
 			try {
-				const data = await getFavorites(userId);
+				const data = await getFavorites();
 				setFavorites(data);
 			} catch (err) {
 				console.error("Error fetching favorites:", err);
 				setFavorites([]);
 			} finally {
-				setLoading(false);
 			}
 		};
 
 		fetchFavorites();
-	}, []);
+	}, [navigate]);
 
 	const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -50,9 +61,15 @@ const FavoritesPage = () => {
 					/>
 				</div>
 			) : favorites.length === 0 ? (
-				<p className="text-center text-gray-500">
-					You haven’t added any favorite movies yet.
-				</p>
+				<div className="flex justify-center items-center h-64">
+					<Empty
+						description={
+							<span className="text-gray-500">
+								You haven’t added any favorite movies yet.
+							</span>
+						}
+					/>
+				</div>
 			) : (
 				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
 					{favorites.map((fav) => (
@@ -80,6 +97,8 @@ const FavoritesPage = () => {
 				movieId={selectedMovieId}
 				isVisible={!!selectedMovieId}
 				onClose={closeMovieModal}
+				favorites={favorites}
+				onFavoriteChange={fetchFavorites}
 			/>
 		</div>
 	);
