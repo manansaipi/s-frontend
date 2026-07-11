@@ -79,12 +79,25 @@ export const FakeCursorDemo: React.FC = () => {
         if (!isAutoScroll) return;
         cancelledRef.current = false;
 
+        const movieNames = [
+            "Inception", "Interstellar", "The Dark Knight", "Avengers",
+            "Spider-Man", "Oppenheimer", "Dune", "Joker",
+            "Parasite", "The Matrix", "Gladiator", "Titanic",
+            "John Wick", "Deadpool", "Batman", "Iron Man",
+            "Black Panther", "Avatar", "Frozen", "Moana",
+        ];
+        let movieIndex = Math.floor(Math.random() * movieNames.length);
+
         const runSequence = async () => {
             if (sequenceRunningRef.current) return;
             sequenceRunningRef.current = true;
 
             while (!cancelledRef.current) {
                 try {
+                    // Pick a random movie for this iteration
+                    const movieName = movieNames[movieIndex];
+                    movieIndex = (movieIndex + 1) % movieNames.length;
+
                     // === PHASE 1: Go to Home ===
                     navigate("/?autoScroll=true");
                     await delay(2500);
@@ -98,8 +111,8 @@ export const FakeCursorDemo: React.FC = () => {
                     await simulateClick(inputEl);
                     await delay(400);
 
-                    // === PHASE 3: Type "Inception" ===
-                    await simulateTyping(inputEl as HTMLInputElement, "Inception");
+                    // === PHASE 3: Type movie name ===
+                    await simulateTyping(inputEl as HTMLInputElement, movieName);
                     await delay(600);
                     if (cancelledRef.current) break;
 
