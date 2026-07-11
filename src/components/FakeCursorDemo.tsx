@@ -133,14 +133,93 @@ export const FakeCursorDemo: React.FC = () => {
                     await moveCursorTo(getStartedBtn, 800);
                     await simulateClick(getStartedBtn);
 
-                    // === PHASE 9: Admire the detail page (trailer + info) ===
+                    // === PHASE 9: Admire the detail page trailer ===
                     await delay(2000);
-                    // Wait for the detail page content to load
-                    const detailTitle = await waitForElement(".min-h-screen.text-white", 8000);
-                    if (!detailTitle || cancelledRef.current) break;
-                    await delay(5000); // Let the user admire the trailer
+                    const detailPage = await waitForElement(".min-h-screen.text-white", 8000);
+                    if (!detailPage || cancelledRef.current) break;
+                    await delay(3000);
 
-                    // === PHASE 10: Loop — hide cursor, go back home ===
+                    // === PHASE 10: Click "More Info" button ===
+                    const moreInfoBtn = await waitForElement("#fake-cursor-more-info", 5000);
+                    if (!moreInfoBtn || cancelledRef.current) break;
+
+                    await moveCursorTo(moreInfoBtn, 1000);
+                    await simulateClick(moreInfoBtn);
+
+                    // === PHASE 11: Wait for MovieInfoModal to open ===
+                    await delay(1500);
+                    const infoModal = await waitForElement(".ant-modal-body", 5000);
+                    if (!infoModal || cancelledRef.current) break;
+
+                    // Scroll down inside the modal to read Details & Crew
+                    await delay(1500);
+                    const modalBody = document.querySelector(".ant-modal-body") as HTMLElement;
+                    if (modalBody) {
+                        for (let i = 0; i < 3; i++) {
+                            if (cancelledRef.current) break;
+                            modalBody.scrollBy({ top: 150, behavior: "smooth" });
+                            await delay(1000);
+                        }
+                    }
+                    await delay(1000);
+
+                    // === PHASE 12: Click "Cast" tab ===
+                    // Ant Design tabs render as .ant-tabs-tab with inner text
+                    const allTabs = document.querySelectorAll(".ant-tabs-tab");
+                    let castTab: Element | null = null;
+                    let reviewsTab: Element | null = null;
+                    allTabs.forEach(tab => {
+                        const text = tab.textContent || "";
+                        if (text.includes("Cast")) castTab = tab;
+                        if (text.includes("Reviews")) reviewsTab = tab;
+                    });
+
+                    if (castTab && !cancelledRef.current) {
+                        await moveCursorTo(castTab, 800);
+                        await simulateClick(castTab);
+                        await delay(1500);
+
+                        // Scroll to see cast members
+                        if (modalBody) {
+                            modalBody.scrollTo({ top: 0, behavior: "smooth" });
+                            await delay(500);
+                            for (let i = 0; i < 3; i++) {
+                                if (cancelledRef.current) break;
+                                modalBody.scrollBy({ top: 150, behavior: "smooth" });
+                                await delay(1000);
+                            }
+                        }
+                        await delay(1000);
+                    }
+
+                    // === PHASE 13: Click "Reviews" tab ===
+                    if (reviewsTab && !cancelledRef.current) {
+                        await moveCursorTo(reviewsTab, 800);
+                        await simulateClick(reviewsTab);
+                        await delay(1500);
+
+                        // Scroll to read reviews
+                        if (modalBody) {
+                            modalBody.scrollTo({ top: 0, behavior: "smooth" });
+                            await delay(500);
+                            for (let i = 0; i < 2; i++) {
+                                if (cancelledRef.current) break;
+                                modalBody.scrollBy({ top: 150, behavior: "smooth" });
+                                await delay(1000);
+                            }
+                        }
+                        await delay(1500);
+                    }
+
+                    // === PHASE 14: Close the modal and loop back home ===
+                    const closeInfoBtn = await waitForElement(".ant-modal-close", 3000);
+                    if (closeInfoBtn && !cancelledRef.current) {
+                        await moveCursorTo(closeInfoBtn, 800);
+                        await simulateClick(closeInfoBtn);
+                    }
+                    await delay(1000);
+
+                    // === PHASE 15: Loop — hide cursor, go back home ===
                     setCursorStyle({ opacity: 0, transform: "translate(50vw, 50vh)" });
                     await delay(1500);
 

@@ -178,6 +178,7 @@ const DetailPage = () => {
 							<div className="text-black text-2xl">Play</div>
 						</button>
 						<button
+							id="fake-cursor-more-info"
 							onClick={() => setIsInfoModalVisible(true)}
 							className="flex items-center bg-[#38403d]  text-white text-lg font-bold py-3 px-6 rounded-md opacity-80 hover:opacity-50 transition cursor-pointer"
 						>
