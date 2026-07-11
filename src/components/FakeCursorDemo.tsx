@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
-    const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
+    // Preserve autoScroll flag in state so it doesn't disappear on navigation to /search
+    const [isAutoScroll] = useState(
+        () => new URLSearchParams(window.location.search).get("autoScroll") === "true"
+    );
     const [cursorStyle, setCursorStyle] = useState<React.CSSProperties>({
         opacity: 0,
         transform: "translate(50vw, 50vh)",
