@@ -20,7 +20,17 @@ export const FakeCursorDemo: React.FC = () => {
         
         const moveCursor = async (selector: string, offsetX = 0, offsetY = 0, duration = 1000) => {
             if (isCancelled) return null;
-            const element = document.querySelector(selector);
+            
+            let element = document.querySelector(selector);
+            let retries = 0;
+            // Poll every 250ms for up to 10 seconds
+            while (!element && retries < 40) {
+                if (isCancelled) return null;
+                await delay(250);
+                element = document.querySelector(selector);
+                retries++;
+            }
+            
             if (element) {
                 const rect = element.getBoundingClientRect();
                 setCursorStyle({
@@ -88,12 +98,12 @@ export const FakeCursorDemo: React.FC = () => {
                 if (searchBtn) {
                     simulateClick(searchBtn);
                     // The app navigates to /search now.
-                    // Wait a bit for the page transition and API load
-                    await delay(3000);
+                    // Wait a bit for the page transition to initiate
+                    await delay(1000);
                     
                     if (isCancelled) return;
                     
-                    // Move to the first search result
+                    // Move to the first search result (moveCursor will poll up to 10s until API finishes)
                     const resultEl = await moveCursor(".fake-cursor-search-result");
                     if (resultEl) {
                         simulateClick(resultEl);
@@ -119,17 +129,17 @@ export const FakeCursorDemo: React.FC = () => {
             }
         };
 
-        // We run the sequence continuously
-        const intervalId = setInterval(() => {
-            runSequence();
-        }, 15000); // Repeat every 15s (make sure the sequence finishes within this time)
+        const loopSequence = async () => {
+            while (!isCancelled) {
+                await runSequence();
+                await delay(2000);
+            }
+        };
         
-        // Run immediately
-        runSequence();
+        loopSequence();
 
         return () => {
             isCancelled = true;
-            clearInterval(intervalId);
         };
     }, [isAutoScroll, navigate, location.pathname]);
 
