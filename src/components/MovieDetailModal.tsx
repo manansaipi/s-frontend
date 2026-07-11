@@ -185,6 +185,7 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 						<div className="flex items-center gap-4">
 							{/* Get Started Button */}
 							<button
+								id="fake-cursor-get-started"
 								onClick={handleGetStarted}
 								className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
 							>

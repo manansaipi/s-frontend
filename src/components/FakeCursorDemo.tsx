@@ -124,19 +124,25 @@ export const FakeCursorDemo: React.FC = () => {
                     await delay(1000);
                     const modalContent = await waitForElement(".ant-modal-content", 5000);
                     if (!modalContent || cancelledRef.current) break;
-                    await delay(3500);
+                    await delay(2500);
 
-                    // === PHASE 8: Close modal ===
-                    const closeBtn = await waitForElement(".ant-modal-close", 3000);
-                    if (!closeBtn || cancelledRef.current) break;
+                    // === PHASE 8: Click "Get Started" to go to detail page ===
+                    const getStartedBtn = await waitForElement("#fake-cursor-get-started", 3000);
+                    if (!getStartedBtn || cancelledRef.current) break;
 
-                    await moveCursorTo(closeBtn, 800);
-                    await simulateClick(closeBtn);
-                    await delay(1500);
+                    await moveCursorTo(getStartedBtn, 800);
+                    await simulateClick(getStartedBtn);
 
-                    // === PHASE 9: Loop — hide cursor briefly then restart ===
-                    setCursorStyle({ opacity: 0, transform: "translate(50vw, 50vh)" });
+                    // === PHASE 9: Admire the detail page (trailer + info) ===
                     await delay(2000);
+                    // Wait for the detail page content to load
+                    const detailTitle = await waitForElement(".min-h-screen.text-white", 8000);
+                    if (!detailTitle || cancelledRef.current) break;
+                    await delay(5000); // Let the user admire the trailer
+
+                    // === PHASE 10: Loop — hide cursor, go back home ===
+                    setCursorStyle({ opacity: 0, transform: "translate(50vw, 50vh)" });
+                    await delay(1500);
 
                 } catch (err) {
                     console.warn("[FakeCursor] sequence error, restarting:", err);
