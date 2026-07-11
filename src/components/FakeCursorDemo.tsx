@@ -36,10 +36,10 @@ export const FakeCursorDemo: React.FC = () => {
         
         const simulateClick = (element: Element) => {
             if (isCancelled || !element) return;
-            setCursorStyle(prev => ({ ...prev, transform: prev.transform + " scale(0.8)", transition: "transform 150ms" }));
+            setCursorStyle(prev => ({ ...prev, transform: (prev.transform ? String(prev.transform) : "") + " scale(0.8)", transition: "transform 150ms" }));
             setTimeout(() => {
                 if (!isCancelled) {
-                    setCursorStyle(prev => ({ ...prev, transform: prev.transform.replace(" scale(0.8)", ""), transition: "transform 150ms" }));
+                    setCursorStyle(prev => ({ ...prev, transform: prev.transform ? String(prev.transform).replace(" scale(0.8)", "") : "", transition: "transform 150ms" }));
                     (element as HTMLElement).click();
                 }
             }, 150);
@@ -49,14 +49,14 @@ export const FakeCursorDemo: React.FC = () => {
             if (isCancelled) return;
             for (let i = 0; i < text.length; i++) {
                 if (isCancelled) break;
-                element.value = text.substring(0, i + 1);
-                // Dispatch native React events
-                const event = new Event("input", { bubbles: true });
-                // React 16+ requires calling the native setter
+                const charSequence = text.substring(0, i + 1);
+                
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
                 if (nativeInputValueSetter) {
-                    nativeInputValueSetter.call(element, element.value);
+                    nativeInputValueSetter.call(element, charSequence);
                 }
+                
+                const event = new Event("input", { bubbles: true });
                 element.dispatchEvent(event);
                 await delay(150);
             }
