@@ -26,10 +26,8 @@ const HomePage = () => {
 	const navigate = useNavigate();
 
 	const handleSearch = () => {
-		const inputEl = document.getElementById("fake-cursor-search-input") as HTMLInputElement;
-		const currentQuery = query || (inputEl ? inputEl.value : "");
-		if (!currentQuery.trim()) return;
-		navigate(`/search?q=${encodeURIComponent(currentQuery.trim())}`);
+		if (!query.trim()) return;
+		navigate(`/search?q=${encodeURIComponent(query.trim())}`);
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

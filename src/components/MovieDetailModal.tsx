@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { getMovieDetail } from "@/services/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
 	addFavorite,
 	removeFavorite,
@@ -62,9 +62,12 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 		fetchDetail();
 	}, [isVisible, movieId]);
 
+	const location = useLocation();
+
 	const handleGetStarted = () => {
 		onClose();
-		navigate(`/movie/${movieId}`);
+		const isAutoScroll = new URLSearchParams(location.search).get("autoScroll") === "true";
+		navigate(`/movie/${movieId}${isAutoScroll ? "?autoScroll=true" : ""}`);
 	};
 
 	const handleToggleFavorite = async () => {

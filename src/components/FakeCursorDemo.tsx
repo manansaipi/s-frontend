@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
-    const [isAutoScroll] = useState(() => new URLSearchParams(window.location.search).get("autoScroll") === "true");
+    const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
     const [cursorStyle, setCursorStyle] = useState<React.CSSProperties>({
         opacity: 0,
         transform: "translate(50vw, 50vh)",
@@ -51,17 +51,13 @@ export const FakeCursorDemo: React.FC = () => {
                 if (isCancelled) break;
                 const charSequence = text.substring(0, i + 1);
                 
-                element.value = charSequence;
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
                 if (nativeInputValueSetter) {
-                    nativeInputValueSetter.call(element, element.value);
+                    nativeInputValueSetter.call(element, charSequence);
                 }
                 
                 const event = new Event("input", { bubbles: true });
                 element.dispatchEvent(event);
-                
-                // Dispatch change event as well just to be sure
-                element.dispatchEvent(new Event("change", { bubbles: true }));
                 await delay(150);
             }
         };
@@ -84,11 +80,7 @@ export const FakeCursorDemo: React.FC = () => {
             if (inputEl) {
                 simulateClick(inputEl);
                 await delay(500);
-                
-                const moviesToSearch = ["Inception", "Interstellar", "The Matrix", "Avatar", "The Dark Knight", "Dune", "Gladiator", "Oppenheimer", "Spider-Man", "Joker"];
-                const randomMovie = moviesToSearch[Math.floor(Math.random() * moviesToSearch.length)];
-                
-                await simulateTyping(inputEl as HTMLInputElement, randomMovie);
+                await simulateTyping(inputEl as HTMLInputElement, "Inception");
                 await delay(500);
                 
                 // Move to search button
@@ -107,17 +99,19 @@ export const FakeCursorDemo: React.FC = () => {
                         simulateClick(resultEl);
                         
                         // Wait for Modal to open and user to "read"
-                        await delay(2500);
+                        await delay(3500);
                         
                         if (isCancelled) return;
                         
-                        // Move to "Get Started" button
+                        // Move to Get Started button in the modal
                         const getStartedBtn = await moveCursor("#fake-cursor-get-started");
                         if (getStartedBtn) {
                             simulateClick(getStartedBtn);
                             
-                            // Let the user view the detail page for a bit
+                            // Wait for Detail Page to load and user to "read"
                             await delay(4000);
+                            
+                            if (isCancelled) return;
                             
                             // Navigate back to home and loop
                             navigate("/?autoScroll=true");
@@ -130,7 +124,7 @@ export const FakeCursorDemo: React.FC = () => {
         // We run the sequence continuously
         const intervalId = setInterval(() => {
             runSequence();
-        }, 18000); // Repeat every 18s (make sure the sequence finishes within this time)
+        }, 20000); // Repeat every 20s (make sure the sequence finishes within this time)
         
         // Run immediately
         runSequence();
