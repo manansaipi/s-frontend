@@ -30,7 +30,7 @@ const DetailPage = () => {
 	const [videoKey, setVideoKey] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [popularMovies, setSimilarMovie] = useState<MovieDTO[]>([]);
-	const [isMuted, setIsMuted] = useState(() => new URLSearchParams(window.location.search).get("autoScroll") === "true");
+	const [isMuted, setIsMuted] = useState(() => window.self !== window.top);
 	const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
 
 	const toggleMute = () => setIsMuted((prev) => !prev);
