@@ -175,7 +175,7 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 							))}
 						</div>
 
-						<p className="text-lg font-light max-w-xl">
+						<p className="text-base md:text-lg font-light max-w-xl line-clamp-4 md:line-clamp-none">
 							{selectedMovie.overview ||
 								selectedMovie.tagline ||
 								"No summary available."}
@@ -187,10 +187,10 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 							<button
 								id="fake-cursor-get-started"
 								onClick={handleGetStarted}
-								className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
+								className="bg-[#e50914] text-white py-2 px-4 md:py-3 md:px-6 rounded-md flex items-center justify-center gap-1 md:gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
 							>
-								<div className="text-lg font-semibold ">Get Started</div>
-								<IoIosArrowForward size={25} />
+								<div className="text-base md:text-lg font-semibold ">Get Started</div>
+								<IoIosArrowForward className="w-5 h-5 md:w-6 md:h-6" />
 							</button>
 
 							{isLoggedIn && (

@@ -160,7 +160,7 @@ const DetailPage = () => {
 						</span>
 					</div>
 
-					<p className="text-lg font-light max-w-lg">
+					<p className="text-base md:text-lg font-light max-w-lg line-clamp-4 md:line-clamp-none">
 						{movieDetail.overview ||
 							movieDetail.tagline ||
 							"No synopsis available."}
