@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
     const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
@@ -8,7 +8,7 @@ export const FakeCursorDemo: React.FC = () => {
         transform: "translate(50vw, 50vh)",
     });
     
-
+    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,17 +20,7 @@ export const FakeCursorDemo: React.FC = () => {
         
         const moveCursor = async (selector: string, offsetX = 0, offsetY = 0, duration = 1000) => {
             if (isCancelled) return null;
-            
-            let element = document.querySelector(selector);
-            let retries = 0;
-            // Poll every 250ms for up to 10 seconds
-            while (!element && retries < 40) {
-                if (isCancelled) return null;
-                await delay(250);
-                element = document.querySelector(selector);
-                retries++;
-            }
-            
+            const element = document.querySelector(selector);
             if (element) {
                 const rect = element.getBoundingClientRect();
                 setCursorStyle({
@@ -98,28 +88,27 @@ export const FakeCursorDemo: React.FC = () => {
                 if (searchBtn) {
                     simulateClick(searchBtn);
                     // The app navigates to /search now.
-                    // Wait a bit for the page transition to initiate
-                    await delay(1000);
+                    // Wait a bit for the page transition and API load
+                    await delay(3000);
                     
                     if (isCancelled) return;
                     
-                    // Move to the first search result (moveCursor will poll up to 10s until API finishes)
+                    // Move to the first search result
                     const resultEl = await moveCursor(".fake-cursor-search-result");
                     if (resultEl) {
                         simulateClick(resultEl);
                         
                         // Wait for Modal to open and user to "read"
-                        await delay(2500);
+                        await delay(3500);
                         
                         if (isCancelled) return;
                         
-                        // Move to "Get Started" button
-                        const getStartedBtn = await moveCursor("#fake-cursor-modal-get-started");
-                        if (getStartedBtn) {
-                            simulateClick(getStartedBtn.closest('button') || getStartedBtn);
-                            
-                            // Wait for DetailPage to load and user to "read"
-                            await delay(4000);
+                        // Move to Modal close button (we added ID to the span inside antd close icon)
+                        // Note: antd close button might be slightly offset from the span.
+                        const closeBtn = await moveCursor("#fake-cursor-modal-close");
+                        if (closeBtn) {
+                            simulateClick(closeBtn.closest('button') || closeBtn);
+                            await delay(1000);
                             
                             // Navigate back to home and loop
                             navigate("/?autoScroll=true");
@@ -129,17 +118,17 @@ export const FakeCursorDemo: React.FC = () => {
             }
         };
 
-        const loopSequence = async () => {
-            while (!isCancelled) {
-                await runSequence();
-                await delay(2000);
-            }
-        };
+        // We run the sequence continuously
+        const intervalId = setInterval(() => {
+            runSequence();
+        }, 15000); // Repeat every 15s (make sure the sequence finishes within this time)
         
-        loopSequence();
+        // Run immediately
+        runSequence();
 
         return () => {
             isCancelled = true;
+            clearInterval(intervalId);
         };
     }, [isAutoScroll, navigate]);
 
