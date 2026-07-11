@@ -139,8 +139,8 @@ const DetailPage = () => {
 				<div className="absolute inset-0 z-10" />
 
 				{/* Content Overlay */}
-				<div className="z-20 max-w-xl space-y-6">
-					<h1 className="text-6xl md:text-7xl font-extrabold leading-tight drop-shadow-lg">
+				<div className="z-20 max-w-xl space-y-4 md:space-y-6 mt-16 md:mt-0">
+					<h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight drop-shadow-lg">
 						{movieDetail.title}
 					</h1>
 
@@ -166,27 +166,27 @@ const DetailPage = () => {
 							"No synopsis available."}
 					</p>
 
-					<div className="flex gap-3 pt-4 cursor-pointer">
+					<div className="flex flex-col sm:flex-row gap-3 pt-4 cursor-pointer w-full sm:w-auto">
 						<button
 							onClick={() => console.log("Playing movie...")}
-							className="flex items-center bg-white text-black text-lg font-bold py-3 px-6 rounded-md hover:bg-gray-200 transition "
+							className="flex items-center justify-center bg-white text-black font-bold py-2 px-4 md:py-3 md:px-6 rounded-md hover:bg-gray-200 transition"
 						>
 							<FaPlay
-								className="mr-3 text-black"
+								className="mr-2 md:mr-3 text-black"
 								size={20}
 							/>
-							<div className="text-black text-2xl">Play</div>
+							<div className="text-xl md:text-2xl">Play</div>
 						</button>
 						<button
 							id="fake-cursor-more-info"
 							onClick={() => setIsInfoModalVisible(true)}
-							className="flex items-center bg-[#38403d]  text-white text-lg font-bold py-3 px-6 rounded-md opacity-80 hover:opacity-50 transition cursor-pointer"
+							className="flex items-center justify-center bg-[#38403d] text-white font-bold py-2 px-4 md:py-3 md:px-6 rounded-md opacity-80 hover:opacity-50 transition cursor-pointer"
 						>
 							<IoMdInformationCircleOutline
 								className="mr-2"
 								size={28}
 							/>
-							<div className="text-2xl">More Info</div>
+							<div className="text-xl md:text-2xl">More Info</div>
 						</button>
 					</div>
 				</div>
@@ -203,7 +203,7 @@ const DetailPage = () => {
 							{popularMovies.map((movie) => (
 								<CarouselItem
 									key={movie.id}
-									className="relative basis-1/6 px-2 shrink-0 transform transition-transform duration-500 hover:scale-105 cursor-pointer"
+									className="relative basis-1/2 md:basis-1/4 lg:basis-1/6 px-2 md:px-4 shrink-0 transform transition-transform duration-500 hover:scale-105 cursor-pointer"
 									onClick={() => (window.location.href = `/movie/${movie.id}`)}
 								>
 									<div className="rounded-xl overflow-hidden h-[30vh]">
