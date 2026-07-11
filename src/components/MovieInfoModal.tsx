@@ -346,6 +346,7 @@ const MovieInfoModal: React.FC<MovieInfoModalProps> = ({
 			open={isVisible}
 			onCancel={onClose}
 			width={"70%"}
+			className="mobile-fullscreen-modal"
 			styles={{
 				content: {
 					padding: 0,
