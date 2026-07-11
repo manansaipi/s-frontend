@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
-    const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
+    const [isAutoScroll] = useState(() => new URLSearchParams(window.location.search).get("autoScroll") === "true");
     const [cursorStyle, setCursorStyle] = useState<React.CSSProperties>({
         opacity: 0,
         transform: "translate(50vw, 50vh)",
@@ -80,7 +80,11 @@ export const FakeCursorDemo: React.FC = () => {
             if (inputEl) {
                 simulateClick(inputEl);
                 await delay(500);
-                await simulateTyping(inputEl as HTMLInputElement, "Inception");
+                
+                const moviesToSearch = ["Inception", "Interstellar", "The Matrix", "Avatar", "The Dark Knight", "Dune", "Gladiator", "Oppenheimer", "Spider-Man", "Joker"];
+                const randomMovie = moviesToSearch[Math.floor(Math.random() * moviesToSearch.length)];
+                
+                await simulateTyping(inputEl as HTMLInputElement, randomMovie);
                 await delay(500);
                 
                 // Move to search button
@@ -99,16 +103,17 @@ export const FakeCursorDemo: React.FC = () => {
                         simulateClick(resultEl);
                         
                         // Wait for Modal to open and user to "read"
-                        await delay(3500);
+                        await delay(2500);
                         
                         if (isCancelled) return;
                         
-                        // Move to Modal close button (we added ID to the span inside antd close icon)
-                        // Note: antd close button might be slightly offset from the span.
-                        const closeBtn = await moveCursor("#fake-cursor-modal-close");
-                        if (closeBtn) {
-                            simulateClick(closeBtn.closest('button') || closeBtn);
-                            await delay(1000);
+                        // Move to "Get Started" button
+                        const getStartedBtn = await moveCursor("#fake-cursor-get-started");
+                        if (getStartedBtn) {
+                            simulateClick(getStartedBtn);
+                            
+                            // Let the user view the detail page for a bit
+                            await delay(4000);
                             
                             // Navigate back to home and loop
                             navigate("/?autoScroll=true");
@@ -121,7 +126,7 @@ export const FakeCursorDemo: React.FC = () => {
         // We run the sequence continuously
         const intervalId = setInterval(() => {
             runSequence();
-        }, 15000); // Repeat every 15s (make sure the sequence finishes within this time)
+        }, 18000); // Repeat every 18s (make sure the sequence finishes within this time)
         
         // Run immediately
         runSequence();
