@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
-    // Preserve autoScroll flag in state so it doesn't disappear on navigation to /search
-    const [isAutoScroll] = useState(
-        () => new URLSearchParams(window.location.search).get("autoScroll") === "true"
-    );
+    const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
     const [cursorStyle, setCursorStyle] = useState<React.CSSProperties>({
         opacity: 0,
         transform: "translate(50vw, 50vh)",
     });
     
-    const location = useLocation();
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,7 +76,7 @@ export const FakeCursorDemo: React.FC = () => {
             if (isCancelled) return;
             
             // Start from homepage if not already there
-            if (location.pathname !== "/") {
+            if (window.location.pathname !== "/") {
                 navigate("/?autoScroll=true");
                 await delay(2000);
             } else {
@@ -144,7 +141,7 @@ export const FakeCursorDemo: React.FC = () => {
         return () => {
             isCancelled = true;
         };
-    }, [isAutoScroll, navigate, location.pathname]);
+    }, [isAutoScroll, navigate]);
 
     if (!isAutoScroll) return null;
 
