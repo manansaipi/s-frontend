@@ -2,6 +2,14 @@
 
 This is the frontend for a movie browsing application, built with React and Vite. It allows users to explore movies, view details, search, and manage a personal "Favorites" list by authenticating with a custom backend.
 
+## 🌟 Features
+
+- **Modern Tech Stack**: Built with React, Vite, Tailwind CSS, and Shadcn/Radix UI for a fast, responsive, and accessible user interface.
+- **Movie & TV Exploration**: Browse and search for movies and TV shows using real-time data from the TMDB API.
+- **Detailed Views**: Access comprehensive details, ratings, and overviews for individual titles.
+- **User Authentication**: Secure user registration and login flows, integrated with a custom backend.
+- **Favorites Management**: Authenticated users can add or remove titles from their personal "Favorites" list.
+
 ## 📋 Prerequisites
 
 Before you begin, ensure you have the following installed on your system:
@@ -52,11 +60,11 @@ Now, back in the s-frontend directory, you need to create a .env file to tell th
 - Create an account if you don't have on [TMDB](https://www.themoviedb.org/)
   to consume movie/tv data.
 - And then follow the [documentation](https://developers.themoviedb.org/3/getting-started/introduction) to create API Key.
-- You can use this key '2824692e8b1b14a21907b1fd78b9e192' or get your own from https://www.themoviedb.org/
+- You can get your own API key from https://www.themoviedb.org/
 - Finally, if you use v3 of TMDB API, create a file named `.env`, and copy and paste the content of `.env.example`. And then paste the API Key you just created.
 ##### And This must match the URL where your backend server is running.
 - VITE_BACKEND_URL=[http://127.0.0.1:8000/api](http://127.0.0.1:8000/api)
-- VITE_TMDB_API_KEY=2824692e8b1b14a21907b1fd78b9e192
+- VITE_TMDB_API_KEY=your_tmdb_api_key_here
 
 ### 5. Run the Frontend Application
 Once the dependencies are installed, the backend is running, and the ```.env``` al file is set up, you can start the frontend development server.

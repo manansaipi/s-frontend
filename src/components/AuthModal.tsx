@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, Tabs, message, notification } from "antd";
+import { Modal, Input, Button, Tabs, message, notification } from "antd";
 import {
 	loginUser,
 	registerUser,
