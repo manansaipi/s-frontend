@@ -83,20 +83,20 @@ const HomePage = () => {
 					</p>
 
 					{/* Search box */}
-					<div className="flex gap-2 items-center justify-center mt-2 ">
+					<div className="flex flex-col md:flex-row gap-3 items-center justify-center mt-6 w-full max-w-3xl mx-auto px-4 md:px-0">
 						<input
 							id="fake-cursor-search-input"
 							placeholder="Search for a movie..."
 							value={query}
 							onKeyDown={handleKeyDown}
 							onChange={(e) => setQuery(e.target.value)}
-							className="w-100 rounded-md bg-transparent border border-gray-400 p-4 "
+							className="w-full md:flex-1 rounded-md bg-transparent border border-gray-400 p-4"
 						/>
-						<div className="text-xl font-semibold ">
+						<div className="text-xl font-semibold w-full md:w-auto">
 							<button
 								id="fake-cursor-search-btn"
 								onClick={handleSearch}
-								className="bg-[#e50914] border-none p-3 rounded-md px-7 cursor-pointer"
+								className="bg-[#e50914] border-none p-4 rounded-md px-7 cursor-pointer w-full md:w-auto flex justify-center items-center"
 							>
 								<div className="flex items-center gap-2">
 									<div>Search</div>
@@ -116,12 +116,12 @@ const HomePage = () => {
 				) : (
 					<div className="text-white max-w-[100vw] ">
 						<Carousel className="w-full max-w-screen-2xl mx-auto ">
-							<div className="p-2 text-2xl font-semibold">Trending Now</div>
-							<CarouselContent className="flex py-5 px-8">
+							<div className="p-2 md:p-4 text-xl md:text-2xl font-semibold">Trending Now</div>
+							<CarouselContent className="flex py-5 px-4 md:px-8">
 								{movies.map((movie, index) => (
 									<CarouselItem
 										key={movie.id}
-										className="relative basis-1/6 px-4 shrink-0 transform transition-transform duration-500 hover:scale-110 cursor-pointer"
+										className="relative basis-1/2 md:basis-1/4 lg:basis-1/6 px-2 md:px-4 shrink-0 transform transition-transform duration-500 hover:scale-110 cursor-pointer"
 										onClick={() => openMovieModal(movie)}
 									>
 										{/* Netflix-style number */}
