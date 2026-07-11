@@ -1,6 +1,8 @@
 import { ConfigProvider } from "antd";
 import AppRoutes from "./routes";
 
+import { FakeCursorDemo } from "./components/FakeCursorDemo";
+
 export default function App() {
 	return (
 		<ConfigProvider
@@ -10,6 +12,7 @@ export default function App() {
 				},
 			}}
 		>
+			<FakeCursorDemo />
 			<AppRoutes />
 		</ConfigProvider>
 	);

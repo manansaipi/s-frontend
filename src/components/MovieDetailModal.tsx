@@ -100,7 +100,7 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 			centered
 			closable={true}
 			closeIcon={
-				<span className="text-white text-3xl opacity-80 hover:opacity-100">
+				<span id="fake-cursor-modal-close" className="text-white text-3xl opacity-80 hover:opacity-100">
 					&times;
 				</span>
 			}

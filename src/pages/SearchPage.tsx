@@ -88,7 +88,7 @@ const SearchPage = () => {
 						<div
 							key={movie.id}
 							onClick={() => openMovieModal(movie.id)}
-							className="relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+							className="fake-cursor-search-result relative overflow-hidden rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
 						>
 							<img
 								src={

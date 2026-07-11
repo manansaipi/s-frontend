@@ -85,6 +85,7 @@ const HomePage = () => {
 					{/* Search box */}
 					<div className="flex gap-2 items-center justify-center mt-2 ">
 						<input
+							id="fake-cursor-search-input"
 							placeholder="Search for a movie..."
 							value={query}
 							onKeyDown={handleKeyDown}
@@ -93,6 +94,7 @@ const HomePage = () => {
 						/>
 						<div className="text-xl font-semibold ">
 							<button
+								id="fake-cursor-search-btn"
 								onClick={handleSearch}
 								className="bg-[#e50914] border-none p-3 rounded-md px-7 cursor-pointer"
 							>
