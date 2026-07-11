@@ -99,19 +99,17 @@ export const FakeCursorDemo: React.FC = () => {
                         simulateClick(resultEl);
                         
                         // Wait for Modal to open and user to "read"
-                        await delay(3500);
+                        await delay(2500);
                         
                         if (isCancelled) return;
                         
-                        // Move to Get Started button in the modal
-                        const getStartedBtn = await moveCursor("#fake-cursor-get-started");
+                        // Move to "Get Started" button
+                        const getStartedBtn = await moveCursor("#fake-cursor-modal-get-started");
                         if (getStartedBtn) {
-                            simulateClick(getStartedBtn);
+                            simulateClick(getStartedBtn.closest('button') || getStartedBtn);
                             
-                            // Wait for Detail Page to load and user to "read"
+                            // Wait for DetailPage to load and user to "read"
                             await delay(4000);
-                            
-                            if (isCancelled) return;
                             
                             // Navigate back to home and loop
                             navigate("/?autoScroll=true");
@@ -124,7 +122,7 @@ export const FakeCursorDemo: React.FC = () => {
         // We run the sequence continuously
         const intervalId = setInterval(() => {
             runSequence();
-        }, 20000); // Repeat every 20s (make sure the sequence finishes within this time)
+        }, 15000); // Repeat every 15s (make sure the sequence finishes within this time)
         
         // Run immediately
         runSequence();

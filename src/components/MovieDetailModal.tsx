@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { getMovieDetail } from "@/services/tmdbService";
 import type { MovieDetailDTO } from "@/dto/MovieDetailDTO";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
 	addFavorite,
 	removeFavorite,
@@ -62,12 +62,9 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 		fetchDetail();
 	}, [isVisible, movieId]);
 
-	const location = useLocation();
-
 	const handleGetStarted = () => {
 		onClose();
-		const isAutoScroll = new URLSearchParams(location.search).get("autoScroll") === "true";
-		navigate(`/movie/${movieId}${isAutoScroll ? "?autoScroll=true" : ""}`);
+		navigate(`/movie/${movieId}`);
 	};
 
 	const handleToggleFavorite = async () => {
@@ -188,7 +185,7 @@ const MovieDetailModal: React.FC<MovieDetailModalProps> = ({
 						<div className="flex items-center gap-4">
 							{/* Get Started Button */}
 							<button
-								id="fake-cursor-get-started"
+								id="fake-cursor-modal-get-started"
 								onClick={handleGetStarted}
 								className="bg-[#e50914] text-white py-3 px-6 rounded-md flex items-center justify-center gap-2 hover:bg-[#ff0a16] transition duration-200 cursor-pointer"
 							>
