@@ -175,7 +175,7 @@ const DetailPage = () => {
 								className="mr-2 md:mr-3 text-black"
 								size={20}
 							/>
-							<div className="text-xl md:text-2xl">Play</div>
+							<div className="text-black text-xl md:text-2xl">Play</div>
 						</button>
 						<button
 							id="fake-cursor-more-info"
