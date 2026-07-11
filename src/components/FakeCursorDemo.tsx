@@ -1,136 +1,159 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const FakeCursorDemo: React.FC = () => {
-    const [isAutoScroll] = useState(() => new URLSearchParams(window.location.search).get("autoScroll") === "true");
+    const isAutoScroll = new URLSearchParams(window.location.search).get("autoScroll") === "true";
     const [cursorStyle, setCursorStyle] = useState<React.CSSProperties>({
         opacity: 0,
         transform: "translate(50vw, 50vh)",
     });
     
-    const location = useLocation();
     const navigate = useNavigate();
+    const cancelledRef = useRef(false);
+    const sequenceRunningRef = useRef(false);
+
+    const delay = useCallback((ms: number) => {
+        return new Promise<void>((resolve) => {
+            setTimeout(() => resolve(), ms);
+        });
+    }, []);
+
+    const waitForElement = useCallback(async (selector: string, timeoutMs = 8000): Promise<Element | null> => {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+            if (cancelledRef.current) return null;
+            const el = document.querySelector(selector);
+            if (el) return el;
+            await new Promise(r => setTimeout(r, 300));
+        }
+        return null;
+    }, []);
+
+    const moveCursorTo = useCallback(async (element: Element, duration = 1000) => {
+        if (cancelledRef.current) return;
+        const rect = element.getBoundingClientRect();
+        setCursorStyle({
+            opacity: 1,
+            transform: `translate(${rect.left + rect.width / 2}px, ${rect.top + rect.height / 2}px)`,
+            transition: `transform ${duration}ms ease-in-out`,
+        });
+        await delay(duration + 100);
+    }, [delay]);
+
+    const simulateClick = useCallback(async (element: Element) => {
+        if (cancelledRef.current || !element) return;
+        // Press down
+        setCursorStyle(prev => ({
+            ...prev,
+            transform: (prev.transform ? String(prev.transform) : "") + " scale(0.8)",
+            transition: "transform 150ms",
+        }));
+        await delay(200);
+        // Release
+        setCursorStyle(prev => ({
+            ...prev,
+            transform: prev.transform ? String(prev.transform).replace(" scale(0.8)", "") : "",
+            transition: "transform 150ms",
+        }));
+        await delay(100);
+        (element as HTMLElement).click();
+    }, [delay]);
+
+    const simulateTyping = useCallback(async (element: HTMLInputElement, text: string) => {
+        if (cancelledRef.current) return;
+        for (let i = 0; i < text.length; i++) {
+            if (cancelledRef.current) break;
+            const charSequence = text.substring(0, i + 1);
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, "value"
+            )?.set;
+            if (nativeInputValueSetter) {
+                nativeInputValueSetter.call(element, charSequence);
+            }
+            element.dispatchEvent(new Event("input", { bubbles: true }));
+            await delay(120);
+        }
+    }, [delay]);
 
     useEffect(() => {
         if (!isAutoScroll) return;
-
-        let isCancelled = false;
-        
-        const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        
-        const moveCursor = async (selector: string, offsetX = 0, offsetY = 0, duration = 1000) => {
-            if (isCancelled) return null;
-            const element = document.querySelector(selector);
-            if (element) {
-                const rect = element.getBoundingClientRect();
-                setCursorStyle({
-                    opacity: 1,
-                    transform: `translate(${rect.left + rect.width / 2 + offsetX}px, ${rect.top + rect.height / 2 + offsetY}px)`,
-                    transition: `transform ${duration}ms ease-in-out`,
-                });
-                await delay(duration + 100);
-                return element;
-            }
-            return null;
-        };
-        
-        const simulateClick = (element: Element) => {
-            if (isCancelled || !element) return;
-            setCursorStyle(prev => ({ ...prev, transform: (prev.transform ? String(prev.transform) : "") + " scale(0.8)", transition: "transform 150ms" }));
-            setTimeout(() => {
-                if (!isCancelled) {
-                    setCursorStyle(prev => ({ ...prev, transform: prev.transform ? String(prev.transform).replace(" scale(0.8)", "") : "", transition: "transform 150ms" }));
-                    (element as HTMLElement).click();
-                }
-            }, 150);
-        };
-        
-        const simulateTyping = async (element: HTMLInputElement, text: string) => {
-            if (isCancelled) return;
-            for (let i = 0; i < text.length; i++) {
-                if (isCancelled) break;
-                const charSequence = text.substring(0, i + 1);
-                
-                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
-                if (nativeInputValueSetter) {
-                    nativeInputValueSetter.call(element, charSequence);
-                }
-                
-                const event = new Event("input", { bubbles: true });
-                element.dispatchEvent(event);
-                await delay(150);
-            }
-        };
+        cancelledRef.current = false;
 
         const runSequence = async () => {
-            if (isCancelled) return;
-            
-            // Start from homepage if not already there
-            if (window.location.pathname !== "/") {
-                navigate("/?autoScroll=true");
-                await delay(2000);
-            } else {
-                await delay(2000); // Initial wait
-            }
+            if (sequenceRunningRef.current) return;
+            sequenceRunningRef.current = true;
 
-            if (isCancelled) return;
-            
-            // Move to search input
-            const inputEl = await moveCursor("#fake-cursor-search-input");
-            if (inputEl) {
-                simulateClick(inputEl);
-                await delay(500);
-                await simulateTyping(inputEl as HTMLInputElement, "Inception");
-                await delay(500);
-                
-                // Move to search button
-                const searchBtn = await moveCursor("#fake-cursor-search-btn");
-                if (searchBtn) {
-                    simulateClick(searchBtn);
-                    // The app navigates to /search now.
-                    // Wait a bit for the page transition and API load
+            while (!cancelledRef.current) {
+                try {
+                    // === PHASE 1: Go to Home ===
+                    navigate("/");
+                    await delay(2500);
+                    if (cancelledRef.current) break;
+
+                    // === PHASE 2: Find and click search input ===
+                    const inputEl = await waitForElement("#fake-cursor-search-input");
+                    if (!inputEl || cancelledRef.current) break;
+
+                    await moveCursorTo(inputEl, 1000);
+                    await simulateClick(inputEl);
+                    await delay(400);
+
+                    // === PHASE 3: Type "Inception" ===
+                    await simulateTyping(inputEl as HTMLInputElement, "Inception");
+                    await delay(600);
+                    if (cancelledRef.current) break;
+
+                    // === PHASE 4: Click Search button ===
+                    const searchBtn = await waitForElement("#fake-cursor-search-btn");
+                    if (!searchBtn || cancelledRef.current) break;
+
+                    await moveCursorTo(searchBtn, 800);
+                    await simulateClick(searchBtn);
+
+                    // === PHASE 5: Wait for search results to load ===
+                    await delay(1000); // Give route transition time
+                    const resultEl = await waitForElement(".fake-cursor-search-result", 10000);
+                    if (!resultEl || cancelledRef.current) break;
+
+                    // === PHASE 6: Click first search result ===
+                    await delay(500);
+                    await moveCursorTo(resultEl, 1200);
+                    await simulateClick(resultEl);
+
+                    // === PHASE 7: Wait for modal to open and admire it ===
+                    await delay(1000);
+                    const modalContent = await waitForElement(".ant-modal-content", 5000);
+                    if (!modalContent || cancelledRef.current) break;
+                    await delay(3500);
+
+                    // === PHASE 8: Close modal ===
+                    const closeBtn = await waitForElement(".ant-modal-close", 3000);
+                    if (!closeBtn || cancelledRef.current) break;
+
+                    await moveCursorTo(closeBtn, 800);
+                    await simulateClick(closeBtn);
+                    await delay(1500);
+
+                    // === PHASE 9: Loop — hide cursor briefly then restart ===
+                    setCursorStyle({ opacity: 0, transform: "translate(50vw, 50vh)" });
+                    await delay(2000);
+
+                } catch (err) {
+                    console.warn("[FakeCursor] sequence error, restarting:", err);
+                    setCursorStyle({ opacity: 0, transform: "translate(50vw, 50vh)" });
                     await delay(3000);
-                    
-                    if (isCancelled) return;
-                    
-                    // Move to the first search result
-                    const resultEl = await moveCursor(".fake-cursor-search-result");
-                    if (resultEl) {
-                        simulateClick(resultEl);
-                        
-                        // Wait for Modal to open and user to "read"
-                        await delay(3500);
-                        
-                        if (isCancelled) return;
-                        
-                        // Move to Modal close button (we added ID to the span inside antd close icon)
-                        // Note: antd close button might be slightly offset from the span.
-                        const closeBtn = await moveCursor("#fake-cursor-modal-close");
-                        if (closeBtn) {
-                            simulateClick(closeBtn.closest('button') || closeBtn);
-                            await delay(1000);
-                            
-                            // Navigate back to home and loop
-                            navigate("/?autoScroll=true");
-                        }
-                    }
                 }
             }
+
+            sequenceRunningRef.current = false;
         };
 
-        // We run the sequence continuously
-        const intervalId = setInterval(() => {
-            runSequence();
-        }, 15000); // Repeat every 15s (make sure the sequence finishes within this time)
-        
-        // Run immediately
         runSequence();
 
         return () => {
-            isCancelled = true;
-            clearInterval(intervalId);
+            cancelledRef.current = true;
         };
-    }, [isAutoScroll, navigate]);
+    }, [isAutoScroll, navigate, delay, waitForElement, moveCursorTo, simulateClick, simulateTyping]);
 
     if (!isAutoScroll) return null;
 
