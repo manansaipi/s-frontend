@@ -51,13 +51,17 @@ export const FakeCursorDemo: React.FC = () => {
                 if (isCancelled) break;
                 const charSequence = text.substring(0, i + 1);
                 
+                element.value = charSequence;
                 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
                 if (nativeInputValueSetter) {
-                    nativeInputValueSetter.call(element, charSequence);
+                    nativeInputValueSetter.call(element, element.value);
                 }
                 
                 const event = new Event("input", { bubbles: true });
                 element.dispatchEvent(event);
+                
+                // Dispatch change event as well just to be sure
+                element.dispatchEvent(new Event("change", { bubbles: true }));
                 await delay(150);
             }
         };
